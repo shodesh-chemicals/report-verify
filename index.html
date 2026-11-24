@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lab Report Verification Portal</title>
+  <title>Lab Test Report &amp; CoA Verification</title>
   <style>
     body { font-family: Arial, sans-serif; background: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 16px; }
     .card { background: #fff; padding: 28px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); width: 100%; max-width: 420px; }
@@ -21,14 +21,14 @@
 </head>
 <body>
   <div class="card">
-    <h2>QC Report Verification</h2>
+    <h2>Lab Test Report &amp; CoA Verification</h2>
     <p class="sub">Enter Report No. and Lab ID to verify and download the original report.</p>
 
     <label for="reportNo">Report No.</label>
-    <input type="text" id="reportNo" placeholder="e.g., SCI-QC-2026-001" required />
+    <input type="text" id="reportNo" placeholder="e.g., SSA-10-26-001" required />
 
     <label for="labId">Lab ID</label>
-    <input type="text" id="labId" placeholder="e.g., LAB-101" required />
+    <input type="text" id="labId" placeholder="e.g., 1010" required />
 
     <button onclick="verifyReport()">Verify &amp; Get PDF</button>
 
@@ -37,7 +37,7 @@
 
   <script>
     const RECORDS = {
-       "SSA-09-26-012|RG-1012": "SSA-09-26-012_Rg-1012.pdf",
+      "SSA-09-26-012|RG-1012": "SSA-09-26-012_Rg-1012.pdf",
       "SSA-11-26-020|RG-1020": "SSA-11-26-020_Rg-1020.pdf",
       "SSA-11-26-019|RG-1019": "SSA-11-26-019_Rg-1019.pdf",
       "SSA-11-26-018|RG-1018": "SSA-11-26-018_Rg-1018.pdf",
@@ -60,9 +60,18 @@
       "SA-10-26-010|RG-1010": "SA-10-26-010_Rg-1010.pdf"
     };
 
+    function normalizeLabId(rawLabId) {
+      const cleaned = rawLabId.trim().toUpperCase();
+      if (!cleaned) return "";
+      if (/^\d+$/.test(cleaned)) {
+        return `RG-${cleaned}`;
+      }
+      return cleaned;
+    }
+
     async function verifyReport() {
       const reportNo = document.getElementById('reportNo').value.trim().toUpperCase();
-      const labId = document.getElementById('labId').value.trim().toUpperCase();
+      const labId = normalizeLabId(document.getElementById('labId').value);
       const resultDiv = document.getElementById('result');
 
       if (!reportNo || !labId) {
